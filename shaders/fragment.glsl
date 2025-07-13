@@ -44,8 +44,8 @@ void main()
     float dist = length(p);
     
     // Create circular source
-    float coreRadius = 0.15;  // Inner bright core
-    float glowRadius = 0.8;   // Outer glow radius
+    float coreRadius = 0.35;   // Large yellow core
+    float glowRadius = 0.4;    // Just slightly larger for thin red edge
     float coreMask = 1.0 - smoothstep(0.0, coreRadius, dist);
     float glowMask = 1.0 - smoothstep(coreRadius, glowRadius, dist);
     
@@ -53,31 +53,45 @@ void main()
     float angle = atan(p.y, p.x);
     
     float n = 0.0;
-    float amplitude = 1.0;
-    float frequency = 4.0;
+    float amplitude = 0.8;
+    float frequency = 2.0;
     
     for (int i = 0; i < 4; i++) {
-        // Use angle and radius for radial turbulence
-        float radialNoise = noise(vec2(angle * frequency * 2.0, dist * frequency - time)) * amplitude;
+        // Use angle and radius for radial turbulence - increased time multiplier for faster animation
+        float radialNoise = noise(vec2(angle * frequency * 2.0, dist * frequency - time * 2.0)) * amplitude;
         // Add some angular variation
-        float angleNoise = noise(vec2(dist * frequency, angle * frequency + time * 0.5)) * amplitude * 0.5;
+        float angleNoise = noise(vec2(dist * frequency, angle * frequency + time * 1.0)) * amplitude * 0.5;
         n += radialNoise + angleNoise;
-        amplitude *= 0.5;
+        amplitude *= 0.6;
         frequency *= 2.0;
     }
     
     n = n * 0.5 + 0.5;
     
-    // Combine core and glow
-    float intensity = coreMask + glowMask * n * 0.8;
+    // Combine core and glow - reduced noise influence for subtler flares
+    float intensity = coreMask + glowMask * n * 0.3;
     
-    // Sun-like color gradient
-    vec3 color = vec3(0.0);
-    color = mix(vec3(0.0, 0.0, 0.0), vec3(0.8, 0.2, 0.0), smoothstep(0.0, 0.2, intensity));
-    color = mix(color, vec3(1.0, 0.4, 0.0), smoothstep(0.2, 0.4, intensity));
-    color = mix(color, vec3(1.0, 0.7, 0.0), smoothstep(0.4, 0.6, intensity));
-    color = mix(color, vec3(1.0, 0.9, 0.5), smoothstep(0.6, 0.8, intensity));
-    color = mix(color, vec3(1.0, 1.0, 0.9), smoothstep(0.8, 1.0, intensity));
+    // Quantize intensity for cel shading effect
+    float bands = 3.0;
+    float quantized = floor(intensity * bands) / bands;
+    
+    // Define distinct color bands - adjusted for mostly yellow
+    vec3 color;
+    if (intensity < 0.1) {
+        color = vec3(0.0, 0.0, 0.0); // Black background
+    } else if (intensity < 0.17) {
+        color = vec3(0.8, 0.2, 0.0); // Thin red outer edge
+    } else if (intensity < 0.23) {
+        color = vec3(1.0, 0.6, 0.0); // Thin orange transition
+    } else {
+        color = vec3(1.0, 1.0, 0.6); // Bright yellow (most of the sun)
+    }
+    
+    // Add slight gradient within bands for style (only if not background)
+    if (intensity > 0.1) {
+        float bandBlend = fract(intensity * bands) * 0.2;
+        color = color * (1.0 + bandBlend);
+    }
     
     gl_FragColor = vec4(color, 1.0);
 }
