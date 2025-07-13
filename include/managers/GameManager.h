@@ -1,9 +1,9 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "Render.h"
-#include "TextureLoader.h"
-#include "FireShader.h"
+#include "util/Renderer.h"
+#include "util/TextureLoader.h"
+#include "shaders/FireShader.h"
 
 class GameManager {
 private:
@@ -30,6 +30,7 @@ public:
     void Run();
     
     // Public configuration methods
+    void SetFireShader(FireShader* shader);
     void SetFireColors(const sf::Glsl::Vec4& outer, const sf::Glsl::Vec4& middle, const sf::Glsl::Vec4& inner);
     void SetAnimationSpeed(float speed);
     

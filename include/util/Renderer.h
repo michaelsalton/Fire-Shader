@@ -11,7 +11,6 @@ public:
     ~Renderer();
     
     bool isOpen() const;
-    bool pollEvent(sf::Event& event);
     void clear();
     void draw(const sf::Drawable& drawable, const sf::RenderStates* states = nullptr);
     void display();

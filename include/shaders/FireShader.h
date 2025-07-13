@@ -1,39 +1,44 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "Render.h"
-#include "TextureLoader.h"
-#include "Shader.h"
 
 class FireShader {
+public:
+    struct FireColors {
+        sf::Glsl::Vec4 outer;
+        sf::Glsl::Vec4 middle;
+        sf::Glsl::Vec4 inner;
+    };
+    
+    struct FireParameters {
+        float animationSpeed;
+        float yOffset;
+        float redBandThreshold;
+        float orangeBandThreshold;
+        float yellowBandThreshold;
+        float alphaThreshold;
+    };
+
 private:
-    Render* renderer;
-    TextureLoader* textureLoader;
-    Shader shader;
-    
-    sf::Sprite fullscreenQuad;
-    sf::Clock clock;
-    
-    // Fire properties
-    float animationSpeed;
-    sf::Glsl::Vec4 outerColor;
-    sf::Glsl::Vec4 middleColor;
-    sf::Glsl::Vec4 innerColor;
-    
-    unsigned int windowWidth;
-    unsigned int windowHeight;
-    
-    void setupQuad();
-    void updateUniforms();
+    FireColors colors;
+    FireParameters parameters;
     
 public:
-    FireShader(Render* render, TextureLoader* texLoader, unsigned int width, unsigned int height);
+    FireShader();
     
-    bool initialize();
-    void update();
-    void render();
+    const FireColors& getColors() const;
+    const FireParameters& getParameters() const;
+    sf::Glsl::Vec4 getOuterColor() const;
+    sf::Glsl::Vec4 getMiddleColor() const;
+    sf::Glsl::Vec4 getInnerColor() const;
+    float getAnimationSpeed() const;
+    float getYOffset() const;
+    float getRedBandThreshold() const;
+    float getOrangeBandThreshold() const;
+    float getYellowBandThreshold() const;
+    float getAlphaThreshold() const;
     
-    // Configuration
+    void setColors(const FireColors& newColors);
+    void setParameters(const FireParameters& newParams);
     void setAnimationSpeed(float speed);
-    void setFireColors(const sf::Glsl::Vec4& outer, const sf::Glsl::Vec4& middle, const sf::Glsl::Vec4& inner);
 };
