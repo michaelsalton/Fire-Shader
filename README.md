@@ -4,7 +4,7 @@ A lightweight C++ material and shader support library built on top of SFML, desi
 
 ## Overview
 
-ShaderBoy provides a clean, object-oriented approach to working with shaders in SFML applications. Instead of manually managing shader uniforms and textures, Shader Boy abstracts this complexity into reusable Material classes that can be easily applied to any drawable object.
+ShaderBoy provides a clean, object-oriented approach to working with shaders in SFML applications. Instead of manually managing shader uniforms and textures, ShaderBoy abstracts this complexity into reusable Material classes that can be easily applied to any drawable object.
 
 ## Key Features
 
@@ -16,7 +16,7 @@ ShaderBoy provides a clean, object-oriented approach to working with shaders in 
 
 ## Architecture
 
-Shader Boy is built around several core components:
+ShaderBoy is built around several core components:
 
 ### Core Classes
 
