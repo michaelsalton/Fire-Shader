@@ -15,6 +15,10 @@ void Renderer::clear() {
     window.clear();
 }
 
+void Renderer::clear(sf::Color color) {
+    window.clear(color);
+}
+
 void Renderer::draw(const sf::Drawable& drawable, const sf::RenderStates* states) {
     if (states) {
         window.draw(drawable, *states);

@@ -12,6 +12,7 @@ public:
     
     bool isOpen() const;
     void clear();
+    void clear(sf::Color color);
     void draw(const sf::Drawable& drawable, const sf::RenderStates* states = nullptr);
     void display();
     void setFramerateLimit(unsigned int limit);

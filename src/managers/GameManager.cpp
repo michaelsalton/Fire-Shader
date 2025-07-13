@@ -44,6 +44,9 @@ bool GameManager::Initialize() {
 
 void GameManager::SetFireShader(FireShader* shader) {
     fireShader = shader;
+    if (fireShader && !fireShader->initialize()) {
+        std::cerr << "Warning: Failed to initialize fire shader" << std::endl;
+    }
 }
 
 void GameManager::SetFireColors(const sf::Glsl::Vec4& outer, const sf::Glsl::Vec4& middle, const sf::Glsl::Vec4& inner) {
@@ -103,12 +106,11 @@ void GameManager::Update() {
 }
 
 void GameManager::Render() {
-    renderer->clear();
+    renderer->clear(sf::Color::Black);
     
-    // Render fire shader effect or other content
+    // Render fire shader effect
     if (fireShader) {
-        // Apply shader and render
-        // This is where you'd typically draw your fire effect
+        fireShader->render(renderer->getWindow());
     }
     
     renderer->display();

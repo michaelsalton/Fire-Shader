@@ -1,6 +1,8 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "util/Shader.h"
+#include <memory>
 
 class FireShader {
 public:
@@ -22,9 +24,16 @@ public:
 private:
     FireColors colors;
     FireParameters parameters;
+    std::unique_ptr<Shader> shader;
+    std::unique_ptr<sf::Texture> noiseTexture;
+    sf::RectangleShape fireRect;
+    sf::Clock animationClock;
     
 public:
     FireShader();
+    ~FireShader();
+    
+    bool initialize();
     
     const FireColors& getColors() const;
     const FireParameters& getParameters() const;
@@ -41,4 +50,7 @@ public:
     void setColors(const FireColors& newColors);
     void setParameters(const FireParameters& newParams);
     void setAnimationSpeed(float speed);
+    
+    void update();
+    void render(sf::RenderWindow& window);
 };
