@@ -9,15 +9,20 @@ int main()
     sf::RenderWindow window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), "Fire Shader");
     window.setFramerateLimit(60);
     
-    sf::RectangleShape fullscreenQuad(sf::Vector2f(static_cast<float>(WINDOW_WIDTH), static_cast<float>(WINDOW_HEIGHT)));
-    fullscreenQuad.setFillColor(sf::Color::White);
-    
-    // Load noise texture
     sf::Texture noiseTexture;
-    noiseTexture.loadFromFile("textures/perlin.png");
+    if (!noiseTexture.loadFromFile("textures/perlin.png")) {
+        std::cerr << "Failed to load noise texture!" << std::endl;
+        return -1;
+    }
+
     noiseTexture.setRepeated(true);
-    noiseTexture.setSmooth(true);
-    
+
+    sf::Sprite fullscreenQuad(noiseTexture);
+    fullscreenQuad.setScale({
+        static_cast<float>(WINDOW_WIDTH) / noiseTexture.getSize().x,
+        static_cast<float>(WINDOW_HEIGHT) / noiseTexture.getSize().y
+    });
+
     sf::Shader fireShader;
     if (!fireShader.loadFromFile("shaders/vertex.glsl", "shaders/fragment.glsl")) {
         std::cerr << "Failed to load shaders!" << std::endl;
@@ -34,11 +39,11 @@ int main()
         }
         
         float time = clock.getElapsedTime().asSeconds();
+        float animationSpeed = 0.5;
 
-        fireShader.setUniform("time", time);
         fireShader.setUniform("noise_texture", noiseTexture);
-        fireShader.setUniform("animation_speed", 0.5f);
-        fireShader.setUniform("y_offset", 0.5f);
+        fireShader.setUniform("time", time);
+        fireShader.setUniform("animation_speed", animationSpeed);
         
         window.clear();
         window.draw(fullscreenQuad, &fireShader);
