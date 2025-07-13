@@ -1,97 +1,36 @@
 #version 120
 
 uniform float time;
-uniform vec2 resolution;
-
-float rand(vec2 co) {
-    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
-}
-
-vec2 gradient(vec2 p) {
-    float angle = rand(p) * 6.28318530718; // 2*PI
-    return vec2(cos(angle), sin(angle));
-}
-
-float noise(vec2 p) {
-    vec2 i = floor(p);
-    vec2 f = fract(p);
-    
-    // Get gradient vectors at corners
-    vec2 ga = gradient(i);
-    vec2 gb = gradient(i + vec2(1.0, 0.0));
-    vec2 gc = gradient(i + vec2(0.0, 1.0));
-    vec2 gd = gradient(i + vec2(1.0, 1.0));
-    
-    // Compute dot products
-    float va = dot(ga, f);
-    float vb = dot(gb, f - vec2(1.0, 0.0));
-    float vc = dot(gc, f - vec2(0.0, 1.0));
-    float vd = dot(gd, f - vec2(1.0, 1.0));
-    
-    // Smooth interpolation
-    vec2 u = f * f * (3.0 - 2.0 * f);
-    
-    return mix(mix(va, vb, u.x), mix(vc, vd, u.x), u.y);
-}
+uniform sampler2D noise_texture;
+uniform float animation_speed;
+uniform float y_offset;
 
 void main()
 {
-    vec2 uv = gl_FragCoord.xy / resolution.xy;
-    vec2 p = uv * 2.0 - 1.0;
-    p.x *= resolution.x / resolution.y;
+    vec2 uv;
+    vec2 animated_uv;
+    vec4 noise_color;
+    vec4 final_color;
     
-    // Distance from center
-    float dist = length(p);
+    // Get UV coordinates from texture coordinates
+    uv = gl_TexCoord[0].xy;
+
+    //gl_FragColor = vec4(uv.x, uv.y, 0.0, 1.0); return;
     
-    // Create circular source
-    float coreRadius = 0.35;   // Large yellow core
-    float glowRadius = 0.4;    // Just slightly larger for thin red edge
-    float coreMask = 1.0 - smoothstep(0.0, coreRadius, dist);
-    float glowMask = 1.0 - smoothstep(coreRadius, glowRadius, dist);
+    // Animate the UV coordinates
+    animated_uv = vec2(uv.x, uv.y + time * animation_speed);
     
-    // Radial coordinates for outward flow
-    float angle = atan(p.y, p.x);
+    // Sample the noise texture
+    noise_color = texture2D(noise_texture, animated_uv);
+
+    gl_FragColor = noise_color; return;
     
-    float n = 0.0;
-    float amplitude = 0.8;
-    float frequency = 2.0;
+    // Create the fire effect
+    final_color = noise_color;
+    final_color.rgb = final_color.rgb + vec3(uv.y - y_offset);
+    final_color.rgb = step(final_color.rgb, vec3(0.5));
+    final_color.rgb = vec3(1.0) - final_color.rgb;
+    final_color.a = final_color.r;
     
-    for (int i = 0; i < 4; i++) {
-        // Use angle and radius for radial turbulence - increased time multiplier for faster animation
-        float radialNoise = noise(vec2(angle * frequency * 2.0, dist * frequency - time * 2.0)) * amplitude;
-        // Add some angular variation
-        float angleNoise = noise(vec2(dist * frequency, angle * frequency + time * 1.0)) * amplitude * 0.5;
-        n += radialNoise + angleNoise;
-        amplitude *= 0.6;
-        frequency *= 2.0;
-    }
-    
-    n = n * 0.5 + 0.5;
-    
-    // Combine core and glow - reduced noise influence for subtler flares
-    float intensity = coreMask + glowMask * n * 0.3;
-    
-    // Quantize intensity for cel shading effect
-    float bands = 3.0;
-    float quantized = floor(intensity * bands) / bands;
-    
-    // Define distinct color bands - adjusted for mostly yellow
-    vec3 color;
-    if (intensity < 0.1) {
-        color = vec3(0.0, 0.0, 0.0); // Black background
-    } else if (intensity < 0.17) {
-        color = vec3(0.8, 0.2, 0.0); // Thin red outer edge
-    } else if (intensity < 0.23) {
-        color = vec3(1.0, 0.6, 0.0); // Thin orange transition
-    } else {
-        color = vec3(1.0, 1.0, 0.6); // Bright yellow (most of the sun)
-    }
-    
-    // Add slight gradient within bands for style (only if not background)
-    if (intensity > 0.1) {
-        float bandBlend = fract(intensity * bands) * 0.2;
-        color = color * (1.0 + bandBlend);
-    }
-    
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = final_color;
 }

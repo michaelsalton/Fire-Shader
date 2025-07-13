@@ -12,6 +12,12 @@ int main()
     sf::RectangleShape fullscreenQuad(sf::Vector2f(static_cast<float>(WINDOW_WIDTH), static_cast<float>(WINDOW_HEIGHT)));
     fullscreenQuad.setFillColor(sf::Color::White);
     
+    // Load noise texture
+    sf::Texture noiseTexture;
+    noiseTexture.loadFromFile("textures/perlin.png");
+    noiseTexture.setRepeated(true);
+    noiseTexture.setSmooth(true);
+    
     sf::Shader fireShader;
     if (!fireShader.loadFromFile("shaders/vertex.glsl", "shaders/fragment.glsl")) {
         std::cerr << "Failed to load shaders!" << std::endl;
@@ -28,8 +34,11 @@ int main()
         }
         
         float time = clock.getElapsedTime().asSeconds();
+
         fireShader.setUniform("time", time);
-        fireShader.setUniform("resolution", sf::Vector2f(static_cast<float>(WINDOW_WIDTH), static_cast<float>(WINDOW_HEIGHT)));
+        fireShader.setUniform("noise_texture", noiseTexture);
+        fireShader.setUniform("animation_speed", 0.5f);
+        fireShader.setUniform("y_offset", 0.5f);
         
         window.clear();
         window.draw(fullscreenQuad, &fireShader);
