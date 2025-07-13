@@ -8,9 +8,10 @@
 
 int main(int argc, char* argv[])
 {
-    FireShader* fireShader = new FireShader();
     GameManager* game = GameManager::Instance();
-
+    
+    FireShader* fireShader = new FireShader(game->GetTextureLoader());
+    
     game->SetFireShader(fireShader);
     game->Run();
     

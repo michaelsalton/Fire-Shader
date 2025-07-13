@@ -34,6 +34,8 @@ public:
     void SetFireColors(const sf::Glsl::Vec4& outer, const sf::Glsl::Vec4& middle, const sf::Glsl::Vec4& inner);
     void SetAnimationSpeed(float speed);
     
+    TextureLoader* GetTextureLoader() { return textureLoader; }
+    
     // Prevent copying
     GameManager(const GameManager&) = delete;
     GameManager& operator=(const GameManager&) = delete;

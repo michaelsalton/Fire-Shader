@@ -1,20 +1,9 @@
 #include "shaders/FireShader.h"
 #include <iostream>
 
-FireShader::FireShader() 
-    : shader(std::make_unique<Shader>()),
-      noiseTexture(std::make_unique<sf::Texture>()) {
-    
-    colors.outer = sf::Glsl::Vec4(1.0f, 0.196f, 0.071f, 1.0f);
-    colors.middle = sf::Glsl::Vec4(1.0f, 0.647f, 0.0f, 1.0f);
-    colors.inner = sf::Glsl::Vec4(1.0f, 1.0f, 0.0f, 1.0f);
-    
-    parameters.animationSpeed = 0.5f;
-    parameters.yOffset = 0.5f;
-    parameters.redBandThreshold = 0.2f;
-    parameters.orangeBandThreshold = 0.5f;
-    parameters.yellowBandThreshold = 0.7f;
-    parameters.alphaThreshold = 0.2f;
+FireShader::FireShader(TextureLoader* texLoader) 
+    : fireMaterial(std::make_unique<MFire>(texLoader)),
+      textureLoader(texLoader) {
     
     // Set up the fire rectangle
     fireRect.setSize(sf::Vector2f(800, 600));
@@ -35,102 +24,123 @@ bool FireShader::initialize() {
         return false;
     }
     
-    if (!shader->loadFromFile("shaders/fire/vertex.glsl", "shaders/fire/fragment.glsl")) {
-        std::cerr << "Failed to load fire shader" << std::endl;
+    // Initialize the fire material
+    if (!fireMaterial->initialize()) {
+        std::cerr << "Failed to initialize fire material" << std::endl;
         return false;
     }
     
-    // Load noise texture
-    if (!noiseTexture->loadFromFile("textures/perlin.png")) {
-        std::cerr << "Failed to load noise texture" << std::endl;
-        return false;
+    // Set the texture on the rectangle after material is initialized
+    sf::Texture* noiseTexture = textureLoader->getTexture("perlin");
+    if (noiseTexture) {
+        fireRect.setTexture(noiseTexture);
     }
-    noiseTexture->setRepeated(true);
-    
-    // Set the texture on the rectangle
-    fireRect.setTexture(noiseTexture.get());
     
     std::cout << "Fire shader initialized successfully" << std::endl;
     return true;
 }
 
 void FireShader::update() {
-    // Update shader uniforms
-    float time = animationClock.getElapsedTime().asSeconds();
-    
-    shader->setUniform("time", time);
-    shader->setUniform("animation_speed", parameters.animationSpeed);
-    shader->setUniform("flame_color_outer", colors.outer);
-    shader->setUniform("flame_color_middle", colors.middle);
-    shader->setUniform("flame_color_inner", colors.inner);
-    shader->setUniform("noise_texture", *noiseTexture);
+    // Update is now handled by the material
+    fireMaterial->update(0.0f); // deltaTime not used in current implementation
 }
 
 void FireShader::render(sf::RenderWindow& window) {
-    if (shader->isLoaded()) {
+    if (fireMaterial && fireMaterial->getNativeShader()) {
+        // Update the material uniforms
         update();
         
+        // Set up render states with the material's shader
         sf::RenderStates states;
-        states.shader = shader->getNativeShader();
+        states.shader = fireMaterial->getNativeShader();
+        states.blendMode = sf::BlendAlpha;
+        
+        // Get the noise texture from material
+        sf::Texture* noiseTexture = textureLoader->getTexture("perlin");
+        if (noiseTexture) {
+            states.texture = noiseTexture;
+            // Set the current texture uniform
+            fireMaterial->getNativeShader()->setUniform("noise_texture", sf::Shader::CurrentTexture);
+        }
         
         window.draw(fireRect, states);
     } else {
-        std::cerr << "Shader not loaded!" << std::endl;
+        std::cerr << "Fire material not loaded!" << std::endl;
     }
 }
 
 const FireShader::FireColors& FireShader::getColors() const {
+    static FireColors colors;
+    // For compatibility, return default colors
+    colors.outer = sf::Glsl::Vec4(1.0f, 0.196f, 0.071f, 1.0f);
+    colors.middle = sf::Glsl::Vec4(1.0f, 0.647f, 0.0f, 1.0f);
+    colors.inner = sf::Glsl::Vec4(1.0f, 1.0f, 0.0f, 1.0f);
     return colors;
 }
 
 const FireShader::FireParameters& FireShader::getParameters() const {
-    return parameters;
+    static FireParameters params;
+    // For compatibility, return default parameters
+    params.animationSpeed = 0.5f;
+    params.yOffset = 0.5f;
+    params.redBandThreshold = 0.2f;
+    params.orangeBandThreshold = 0.5f;
+    params.yellowBandThreshold = 0.7f;
+    params.alphaThreshold = 0.2f;
+    return params;
 }
 
 sf::Glsl::Vec4 FireShader::getOuterColor() const {
-    return colors.outer;
+    return getColors().outer;
 }
 
 sf::Glsl::Vec4 FireShader::getMiddleColor() const {
-    return colors.middle;
+    return getColors().middle;
 }
 
 sf::Glsl::Vec4 FireShader::getInnerColor() const {
-    return colors.inner;
+    return getColors().inner;
 }
 
 float FireShader::getAnimationSpeed() const {
-    return parameters.animationSpeed;
+    return getParameters().animationSpeed;
 }
 
 float FireShader::getYOffset() const {
-    return parameters.yOffset;
+    return getParameters().yOffset;
 }
 
 float FireShader::getRedBandThreshold() const {
-    return parameters.redBandThreshold;
+    return getParameters().redBandThreshold;
 }
 
 float FireShader::getOrangeBandThreshold() const {
-    return parameters.orangeBandThreshold;
+    return getParameters().orangeBandThreshold;
 }
 
 float FireShader::getYellowBandThreshold() const {
-    return parameters.yellowBandThreshold;
+    return getParameters().yellowBandThreshold;
 }
 
 float FireShader::getAlphaThreshold() const {
-    return parameters.alphaThreshold;
+    return getParameters().alphaThreshold;
 }
 
 void FireShader::setColors(const FireColors& newColors) {
-    colors = newColors;
+    if (fireMaterial) {
+        fireMaterial->setFireColors(newColors.outer, newColors.middle, newColors.inner);
+    }
 }
 
 void FireShader::setParameters(const FireParameters& newParams) {
-    parameters = newParams;
+    if (fireMaterial) {
+        fireMaterial->setAnimationSpeed(newParams.animationSpeed);
+        // Other parameters can be set if MFire is extended to support them
+    }
 }
 
 void FireShader::setAnimationSpeed(float speed) {
-    parameters.animationSpeed = speed;
+    if (fireMaterial) {
+        fireMaterial->setAnimationSpeed(speed);
+    }
 }

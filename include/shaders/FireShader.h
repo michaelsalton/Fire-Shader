@@ -1,7 +1,8 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "util/Shader.h"
+#include "materials/MFire.h"
+#include "util/TextureLoader.h"
 #include <memory>
 
 class FireShader {
@@ -22,15 +23,12 @@ public:
     };
 
 private:
-    FireColors colors;
-    FireParameters parameters;
-    std::unique_ptr<Shader> shader;
-    std::unique_ptr<sf::Texture> noiseTexture;
+    std::unique_ptr<MFire> fireMaterial;
+    TextureLoader* textureLoader;
     sf::RectangleShape fireRect;
-    sf::Clock animationClock;
     
 public:
-    FireShader();
+    FireShader(TextureLoader* texLoader);
     ~FireShader();
     
     bool initialize();

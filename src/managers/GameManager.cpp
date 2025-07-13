@@ -5,6 +5,7 @@ GameManager* GameManager::instance = nullptr;
 
 GameManager::GameManager() 
     : renderer(nullptr), textureLoader(nullptr), fireShader(nullptr), initialized(false) {
+    Initialize();
 }
 
 GameManager* GameManager::Instance() {
@@ -29,7 +30,7 @@ bool GameManager::Initialize() {
     const unsigned int WINDOW_HEIGHT = 600;
     
     // Initialize systems
-    renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT, "Fire Shader");
+    renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT, "ShaderBoy");
     textureLoader = new TextureLoader();
     // fireShader will be set via SetFireShader
     
@@ -66,8 +67,8 @@ void GameManager::SetAnimationSpeed(float speed) {
 }
 
 void GameManager::Run() {
-    if (!Initialize()) {
-        std::cerr << "Failed to initialize GameManager!" << std::endl;
+    if (!initialized) {
+        std::cerr << "GameManager not initialized!" << std::endl;
         return;
     }
     
