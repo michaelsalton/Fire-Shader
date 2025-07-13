@@ -55,6 +55,5 @@ int main()
         window.draw(fullscreenQuad, &fireShader);
         window.display();
     }
-    
     return 0;
 }
