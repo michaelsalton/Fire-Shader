@@ -40,10 +40,16 @@ int main()
         
         float time = clock.getElapsedTime().asSeconds();
         float animationSpeed = 0.5;
+        sf::Glsl::Vec4 flameColorOuter(1.0, 0.2, 0.1, 0.7);
+        sf::Glsl::Vec4 flameColorMiddle(1.0, 0.6, 0.0, 0.7);
+        sf::Glsl::Vec4 flameColorInner(1.0, 1.0, 0.0, 0.7);
 
         fireShader.setUniform("noise_texture", noiseTexture);
         fireShader.setUniform("time", time);
         fireShader.setUniform("animation_speed", animationSpeed);
+        fireShader.setUniform("flame_color_outer", flameColorOuter);
+        fireShader.setUniform("flame_color_middle", flameColorMiddle);
+        fireShader.setUniform("flame_color_inner", flameColorInner);
         
         window.clear();
         window.draw(fullscreenQuad, &fireShader);
