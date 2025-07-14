@@ -17,12 +17,12 @@ MFire::~MFire() {
 }
 
 bool MFire::initialize() {
-    if (!loadShader("ShaderBoy/assets/shaders/fire/vertex.glsl", "ShaderBoy/assets/shaders/fire/fragment.glsl")) {
+    if (!loadShader("TheRealSlimShader/assets/shaders/fire/vertex.glsl", "TheRealSlimShader/assets/shaders/fire/fragment.glsl")) {
         std::cerr << "Failed to load fire shader" << std::endl;
         return false;
     }
     
-    if (!textureLoader->loadTexture("perlin", "ShaderBoy/assets/textures/perlin.png")) {
+    if (!textureLoader->loadTexture("perlin", "TheRealSlimShader/assets/textures/perlin.png")) {
         std::cerr << "Failed to load perlin noise texture" << std::endl;
         return false;
     }
