@@ -28,7 +28,7 @@ bool GameManager::Initialize() {
     const unsigned int WINDOW_WIDTH = 800;
     const unsigned int WINDOW_HEIGHT = 600;
     
-    renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT, "ShaderBoy");
+    renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT, "TheRealSlimShader");
     textureLoader = new TextureLoader();
     
     renderer->setFramerateLimit(60);

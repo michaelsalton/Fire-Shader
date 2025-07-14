@@ -15,7 +15,6 @@ private:
     
     bool initialized;
     
-    // Private constructor for singleton
     GameManager();
     
     bool Initialize();
