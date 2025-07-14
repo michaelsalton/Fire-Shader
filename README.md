@@ -1,10 +1,10 @@
-# ShaderBoy
+# TheRealSlimShader
 
 A lightweight C++ material and shader support library built on top of SFML, designed to make shader management and material application simple and intuitive.
 
 ## Overview
 
-ShaderBoy provides a clean, object-oriented approach to working with shaders in SFML applications. Instead of manually managing shader uniforms and textures, ShaderBoy abstracts this complexity into reusable Material classes that can be easily applied to any drawable object.
+TheRealSlimShader provides a clean, object-oriented approach to working with shaders in SFML applications. Instead of manually managing shader uniforms and textures, TheRealSlimShader abstracts this complexity into reusable Material classes that can be easily applied to any drawable object.
 
 ## Key Features
 
@@ -16,7 +16,7 @@ ShaderBoy provides a clean, object-oriented approach to working with shaders in 
 
 ## Architecture
 
-ShaderBoy is built around several core components:
+TheRealSlimShader is built around several core components:
 
 ### Core Classes
 
@@ -42,7 +42,6 @@ ShaderBoy is built around several core components:
 int main() {
     GameManager* game = GameManager::Instance();
     
-    // Create and configure a fire material
     MFire* mFire = new MFire(&textureLoader);
     mFire->initialize();
     mFire->setFireColors(
