@@ -2,7 +2,6 @@
 #include <iostream>
 
 MFire::MFire(TextureLoader* texLoader) : textureLoader(texLoader) {
-    // Set default fire configuration
     config.outerColor = sf::Glsl::Vec4(1.0f, 0.196f, 0.071f, 1.0f);
     config.middleColor = sf::Glsl::Vec4(1.0f, 0.647f, 0.0f, 1.0f);
     config.innerColor = sf::Glsl::Vec4(1.0f, 1.0f, 0.0f, 1.0f);
@@ -18,14 +17,12 @@ MFire::~MFire() {
 }
 
 bool MFire::initialize() {
-    // Load the fire shader
-    if (!loadShader("shaders/fire/vertex.glsl", "shaders/fire/fragment.glsl")) {
+    if (!loadShader("ShaderBoy/assets/shaders/fire/vertex.glsl", "ShaderBoy/assets/shaders/fire/fragment.glsl")) {
         std::cerr << "Failed to load fire shader" << std::endl;
         return false;
     }
     
-    // Load the noise texture
-    if (!textureLoader->loadTexture("perlin", "textures/perlin.png")) {
+    if (!textureLoader->loadTexture("perlin", "ShaderBoy/assets/textures/perlin.png")) {
         std::cerr << "Failed to load perlin noise texture" << std::endl;
         return false;
     }
@@ -36,7 +33,6 @@ bool MFire::initialize() {
         setTexture("noise_texture", noiseTexture);
     }
     
-    // Set initial uniform values
     setVec4("flame_color_outer", config.outerColor);
     setVec4("flame_color_middle", config.middleColor);
     setVec4("flame_color_inner", config.innerColor);
@@ -50,13 +46,11 @@ void MFire::update(float deltaTime) {
     float time = clock.getElapsedTime().asSeconds();
     setFloat("time", time);
     
-    // Update any dynamic uniforms
     setVec4("flame_color_outer", config.outerColor);
     setVec4("flame_color_middle", config.middleColor);
     setVec4("flame_color_inner", config.innerColor);
     setFloat("animation_speed", config.animationSpeed);
     
-    // Apply all uniforms to the shader
     apply();
 }
 

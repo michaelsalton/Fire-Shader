@@ -28,7 +28,7 @@ ShaderBoy is built around several core components:
 
 ### Specialized Materials
 
-- **FireMaterial**: Animated fire effect with customizable colors and parameters
+- **MFire**: Animated fire effect with customizable colors and parameters
 - *More materials coming soon...*
 
 ## Quick Start
@@ -37,21 +37,21 @@ ShaderBoy is built around several core components:
 
 ```cpp
 #include "GameManager.h"
-#include "FireMaterial.h"
+#include "MFire.h"
 
 int main() {
     GameManager* game = GameManager::Instance();
     
     // Create and configure a fire material
-    FireMaterial* fireMaterial = new FireMaterial(&textureLoader);
-    fireMaterial->initialize();
-    fireMaterial->setFireColors(
-        sf::Glsl::Vec4(1.0f, 0.2f, 0.1f, 1.0f),  // Red
-        sf::Glsl::Vec4(1.0f, 0.6f, 0.0f, 1.0f),  // Orange
-        sf::Glsl::Vec4(1.0f, 1.0f, 0.0f, 1.0f)   // Yellow
+    MFire* mFire = new MFire(&textureLoader);
+    mFire->initialize();
+    mFire->setFireColors(
+        sf::Glsl::Vec4(1.0f, 0.2f, 0.1f, 1.0f),
+        sf::Glsl::Vec4(1.0f, 0.6f, 0.0f, 1.0f),
+        sf::Glsl::Vec4(1.0f, 1.0f, 0.0f, 1.0f)
     );
     
-    game->SetFireMaterial(fireMaterial);
+    game->SetMFire(mFire);
     game->Run();
     
     GameManager::Release();
@@ -62,13 +62,13 @@ int main() {
 ### Creating Custom Materials
 
 ```cpp
-class WaterMaterial : public Material {
+class MWater : public Material {
 private:
     float waveSpeed;
     float waveHeight;
     
 public:
-    WaterMaterial() {
+    MWater() {
         waveSpeed = 1.0f;
         waveHeight = 0.1f;
     }
@@ -97,7 +97,7 @@ public:
 sf::Sprite waterSprite(waterTexture);
 
 // Create a renderable object with your custom material
-RenderableObject waterObject(&waterSprite, waterMaterial);
+RenderableObject waterObject(&waterSprite, mWater);
 
 // In your game loop
 waterObject.update(deltaTime);
