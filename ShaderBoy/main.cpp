@@ -3,8 +3,8 @@
 #include <cstring>
 #include <cmath>
 #include <algorithm>
-#include "managers/GameManager.h"
-#include "shaders/FireShader.h"
+#include "Core/GameManager.h"
+#include "Shaders/FireShader.h"
 
 int main(int argc, char* argv[])
 {

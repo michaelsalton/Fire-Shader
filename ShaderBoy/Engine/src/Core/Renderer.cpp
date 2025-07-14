@@ -1,4 +1,4 @@
-#include "util/Renderer.h"
+#include "Core/Renderer.h"
 
 Renderer::Renderer(unsigned int width, unsigned int height, const std::string& title)
     : window(sf::VideoMode({width, height}), title) {

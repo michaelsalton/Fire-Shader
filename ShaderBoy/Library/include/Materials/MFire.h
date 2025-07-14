@@ -1,6 +1,6 @@
 #pragma once
-#include "util/Material.h"
-#include "util/TextureLoader.h"
+#include "Material/Material.h"
+#include "Utils/TextureLoader.h"
 
 class MFire : public Material {
 private:

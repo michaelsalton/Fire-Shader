@@ -1,8 +1,8 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "materials/MFire.h"
-#include "util/TextureLoader.h"
+#include "Materials/MFire.h"
+#include "Utils/TextureLoader.h"
 #include <memory>
 
 class FireShader {

@@ -1,4 +1,4 @@
-#include "managers/GameManager.h"
+#include "Core/GameManager.h"
 #include <iostream>
 
 GameManager* GameManager::instance = nullptr;
@@ -19,7 +19,6 @@ void GameManager::Release() {
     if (instance != nullptr) {
         delete instance->renderer;
         delete instance->textureLoader;
-        // fireShader is now managed by main
         delete instance;
         instance = nullptr;
     }
@@ -29,16 +28,11 @@ bool GameManager::Initialize() {
     const unsigned int WINDOW_WIDTH = 800;
     const unsigned int WINDOW_HEIGHT = 600;
     
-    // Initialize systems
     renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT, "ShaderBoy");
     textureLoader = new TextureLoader();
-    // fireShader will be set via SetFireShader
     
-    // Configure renderer
     renderer->setFramerateLimit(60);
-    
-    // Fire shader initialization moved to main
-    
+        
     initialized = true;
     return true;
 }
@@ -72,7 +66,6 @@ void GameManager::Run() {
         return;
     }
     
-    // Main game loop
     while (renderer->isOpen()) {
         HandleEvents();
         Update();
@@ -98,18 +91,13 @@ void GameManager::HandleEvents() {
 }
 
 void GameManager::Update() {
-    // Update game logic here
     static sf::Clock clock;
-    [[maybe_unused]] float deltaTime = clock.restart().asSeconds();
-    
-    // Update animations, physics, etc.
-    // deltaTime can be used for frame-independent movement
+    float deltaTime = clock.restart().asSeconds();
 }
 
 void GameManager::Render() {
     renderer->clear(sf::Color::Black);
     
-    // Render fire shader effect
     if (fireShader) {
         fireShader->render(renderer->getWindow());
     }

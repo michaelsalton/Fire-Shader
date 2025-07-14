@@ -1,4 +1,4 @@
-#include "util/Material.h"
+#include "Material/Material.h"
 
 Material::Material() : shader(nullptr) {
 }

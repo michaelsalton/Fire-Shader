@@ -1,4 +1,4 @@
-#include "shaders/FireShader.h"
+#include "Shaders/FireShader.h"
 #include <iostream>
 
 FireShader::FireShader(TextureLoader* texLoader) 

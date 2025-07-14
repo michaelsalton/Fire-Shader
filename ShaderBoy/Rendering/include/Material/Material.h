@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <unordered_map>
-#include "Shader.h"
+#include "Shader/Shader.h"
 
 class Material {
 protected:

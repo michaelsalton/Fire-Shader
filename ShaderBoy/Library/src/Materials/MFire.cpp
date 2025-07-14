@@ -1,4 +1,4 @@
-#include "materials/MFire.h"
+#include "Materials/MFire.h"
 #include <iostream>
 
 MFire::MFire(TextureLoader* texLoader) : textureLoader(texLoader) {

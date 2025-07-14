@@ -1,4 +1,4 @@
-#include "util/Shader.h"
+#include "Shader/Shader.h"
 #include <iostream>
 
 Shader::Shader() : loaded(false) {

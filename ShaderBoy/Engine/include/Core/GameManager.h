@@ -1,9 +1,9 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "util/Renderer.h"
-#include "util/TextureLoader.h"
-#include "shaders/FireShader.h"
+#include "Core/Renderer.h"
+#include "Utils/TextureLoader.h"
+#include "Shaders/FireShader.h"
 
 class GameManager {
 private:
