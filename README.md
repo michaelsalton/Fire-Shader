@@ -1,4 +1,4 @@
-# TheRealSlimShader
+# SlimShader
 
 A lightweight C++ material and shader support library built on top of SFML, designed to make shader management and material application simple and intuitive.
 
@@ -6,7 +6,7 @@ A lightweight C++ material and shader support library built on top of SFML, desi
 
 ## Overview
 
-TheRealSlimShader provides a clean, object-oriented approach to working with shaders in SFML applications. Instead of manually managing shader uniforms and textures, TheRealSlimShader abstracts this complexity into reusable Material classes that can be easily applied to any drawable object.
+SlimShader provides a clean, object-oriented approach to working with shaders in SFML applications. Instead of manually managing shader uniforms and textures, TheRealSlimShader abstracts this complexity into reusable Material classes that can be easily applied to any drawable object.
 
 ## Key Features
 
@@ -18,7 +18,7 @@ TheRealSlimShader provides a clean, object-oriented approach to working with sha
 
 ## Architecture
 
-TheRealSlimShader is built around several core components:
+SlimShader is built around several core components:
 
 ### Core Classes
 
